@@ -11,6 +11,7 @@ use App\Entities\Site;
  * @since   1.0.0
  * @version 1.0.0
  */
+
 class Sync extends BaseController
 {
 
@@ -24,49 +25,47 @@ class Sync extends BaseController
 	 * @return void
 	 */
 	public function index()
+{
+	helper(['remote', 'messenger', 'network', 'encrypt']);
+
+	define('EXECUTION_WINDOW', intval(getenv('window.period') ?: 1));
+	define('EXECUTION_INTERVAL', intval(getenv('window.interval') ?: 1));
+
+    set_time_limit((int)(max(EXECUTION_WINDOW, ini_get('max_execution_time')) * 1.5));
+
+	$start = time();
+
+	do
 	{
-		helper(['remote', 'messenger', 'network', 'encrypt']);
+		$sites = network_stores();
 
-		// execution window of php script
-		define('EXECUTION_WINDOW', intval(getenv('window.period') ?: 1));
-		define('EXECUTION_INTERVAL', intval(getenv('window.interval') ?: 1));
-
-		// max execute 110% of window period max
-		set_time_limit(max(EXECUTION_WINDOW, ini_get('max_execution_time')) * 1.5);
-
-		$start = time();
-
-		do
+		foreach ($sites as $site)
 		{
-			$sites = network_stores();
+			message_add('network', network_get_store());
 
-			foreach ($sites as $site)
+			$siteEntity = new Site($site);
+
+			do
 			{
-				message_add('network', network_get_store());
-
-				$siteEntity = new Site($site);
-
-				do
-				{
-					remote_get_content($siteEntity->link, $siteEntity->encrypt);
-				}
-				while (message_has_content());
-
-				$siteEntity->destroy();
+				remote_get_content($siteEntity->link, $siteEntity->encrypt);
 			}
+			while (message_has_content());
 
-			$wait = ((time() - $start) % EXECUTION_INTERVAL) * EXECUTION_INTERVAL;
-
-			// is the wait worth it's salt
-			if (time() + $wait < $start + EXECUTION_WINDOW)
-			{
-				sleep($wait);
-			}
-			else
-			{
-				break;
-			}
+			$siteEntity->destroy();
 		}
-		while (time() < $start + EXECUTION_WINDOW);
+
+		$wait = ((time() - $start) % EXECUTION_INTERVAL) * EXECUTION_INTERVAL;
+
+		if (time() + $wait < $start + EXECUTION_WINDOW)
+		{
+			sleep($wait);
+		}
+		else
+		{
+			break;
+		}
 	}
+	while (time() < $start + EXECUTION_WINDOW);
+}
+
 }

@@ -1,11 +1,14 @@
 <?php
+ini_set('max_execution_time', 120); // Increase to 30 seconds
 
 // Path to the front controller (this file)
 define('FCPATH', __DIR__ . DIRECTORY_SEPARATOR);
 
 // Ensure the current directory is pointing to the front controller's directory
 chdir(FCPATH);
-
+if (! defined('ENVIRONMENT')) {
+    define('ENVIRONMENT', getenv('CI_ENVIRONMENT') ?: 'production');
+}
 /*
  *---------------------------------------------------------------
  * BOOTSTRAP THE APPLICATION
@@ -21,7 +24,7 @@ require FCPATH . '../app/Config/Paths.php';
 // ^^^ Change this line if you move your application folder
 
 $paths = new Config\Paths();
-
+ 
 // Location of the framework bootstrap file.
 require rtrim($paths->systemDirectory, '\\/ ') . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
