@@ -1,18 +1,35 @@
 # CodeIgniter 4 Application Starter
 
-## What is CodeIgniter?
+## Running the app?
+php C:\Users\quatrohauszm\Desktop\seedco-server\public\index.php sync
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](http://codeigniter.com).
+sites.json
+{
+  "time": 1700000000,
+  "urls": [
+    {
+      "link": "https://seedcoonlineshop.com/mw",
+      "encrypt": true
+    },
+    {
+      "link": "https://seedcoonlineshop.com/zm",
+      "encrypt": true
+    }
+]
+}
 
-This repository holds a composer-installable app starter.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+.env
+database.default.hostname = 127.0.0.1,1433
+database.default.DBDriver = SQLSRV
+remote.email=
+remote.password=
 
-More information about the plans for version 4 can be found in [the announcement](http://forum.codeigniter.com/thread-62615.html) on the forums.
+CI_ENVIRONMENT = development
 
-The user guide corresponding to this version of the framework can be found
-[here](https://codeigniter4.github.io/userguide/).
+encryption.key = your_encryption_key
+encryption.driver = OpenSSL
+encryption.cipher = AES-256-CTR
+encryption.blockSize = 16
 
 ## Installation & updates
 
