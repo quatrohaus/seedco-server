@@ -3,6 +3,7 @@
 ## Running the app?
 php C:\Users\quatrohauszm\Desktop\seedco-server\public\index.php sync
 
+```json
 sites.json
 {
   "time": 1700000000,
@@ -17,8 +18,9 @@ sites.json
     }
 ]
 }
-
+```
 .env
+```bash
 database.default.hostname = 127.0.0.1,1433
 database.default.DBDriver = SQLSRV
 remote.email=
@@ -30,6 +32,7 @@ encryption.key = your_encryption_key
 encryption.driver = OpenSSL
 encryption.cipher = AES-256-CTR
 encryption.blockSize = 16
+```
 
 ## Installation & updates
 
